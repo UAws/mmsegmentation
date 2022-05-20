@@ -1,11 +1,10 @@
 from .builder import DATASETS
 from .custom import CustomDataset
 
+
 # Register MyDataset class into DATASETS
 @DATASETS.register_module()
 class KittiSegDataset(CustomDataset):
-
-
     CLASSES = ('road', 'sidewalk', 'building', 'wall', 'fence', 'pole',
                'traffic light', 'traffic sign', 'vegetation', 'terrain', 'sky',
                'person', 'rider', 'car', 'truck', 'bus', 'train', 'motorcycle',

@@ -2,15 +2,7 @@
 log_config = dict(
     interval=50,
     hooks=[
-        dict(type='TextLoggerHook', by_epoch=False),
-        dict(type='WandbLoggerHook',
-             init_kwargs={
-                 'entity': 'ak6',
-                 'project': 'mmseg_tanning'
-             },
-             out_suffix=('.log', '.log.json', '.pth', '.py')
-             ),
-        # dict(type='TensorboardLoggerHook')
+        dict(type='TextLoggerHook', by_epoch=False)
     ])
 # yapf:enable
 dist_params = dict(backend='nccl')

@@ -65,6 +65,7 @@ class EncoderDecoder(BaseSegmentor):
         x = self.backbone(img)
         if self.with_neck:
             x = self.neck(x)
+        # print(len(x))
         return x
 
     def encode_decode(self, img, img_metas):
