@@ -5,7 +5,7 @@ _base_ = [
     '../_base_/wandb_logger_mmseg_training_kitti_segFormer.py'
 ]
 
-checkpoint_file = 'https://download.openmmlab.com/mmsegmentation/v0.5/pretrain/swin/swin_tiny_patch4_window7_224_20220317-1cdeb081.pth'  # noqa
+checkpoint_file = 'checkpoints/swin_tiny_patch4_window7_224_22k.pth'  # noqa
 model = dict(
     backbone=dict(
         init_cfg=dict(type='Pretrained', checkpoint=checkpoint_file),
@@ -54,7 +54,7 @@ val_interval = 1600
 workflow = [('train', val_interval), ('val', 1)]
 evaluation = dict(interval=val_interval, metric='mIoU', pre_eval=True, save_best='mIoU')
 checkpoint_config = dict(_delete_=True)
-data = dict(samples_per_gpu=2, workers_per_gpu=2)
+data = dict(samples_per_gpu=2, workers_per_gpu=4)
 
 # print(_base_)
 
