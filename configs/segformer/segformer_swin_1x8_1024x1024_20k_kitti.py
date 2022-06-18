@@ -1,7 +1,7 @@
 _base_ = [
     '../_base_/models/segformer_swin.py',
     '../_base_/datasets/kitti_seg_basic.py',
-    '../_base_/default_runtime.py','../_base_/schedules/schedule_160k.py',
+    '../_base_/default_runtime.py', '../_base_/schedules/schedule_20k.py',
     '../_base_/wandb_logger_mmseg_training_kitti_segFormer.py'
 ]
 
@@ -21,10 +21,10 @@ model = dict(
         loss_decode=dict(
             type='CrossEntropyLoss', use_sigmoid=False, loss_weight=1.0, avg_non_ignore=True,
             # Kitti
-            class_weight=[0.74928016, 0.84599227, 0.80983893, 0.94461, 0.94403714, 0.91394077,
-                          1.03971502, 0.94605021, 0.73242514, 0.79119748, 0.78673501, 1.14044977,
-                          1.30447229, 0.81121395, 1.11445713, 1.18535591, 0.95353713, 1.72195258,
-                          1.2647391])
+            class_weight=[0.75952312, 0.8523161, 0.80858376, 0.94312681, 0.95249373, 0.91668514,
+                          1.02670926, 0.99855901, 0.74849044, 0.8041853, 0.79715573, 1.14388026,
+                          1.28290288, 0.82965688, 1.04470749, 1.17929034, 1.32624767, 1.40595936,
+                          1.17952672])
     ),
 )
 
@@ -55,7 +55,9 @@ lr_config = dict(
 
 # optimizer
 
-val_interval = 1000
+val_interval = 500
+
+runner = dict(type='IterBasedRunner', max_iters=10000)
 
 # runner = dict(
 #     _delete_=True,
@@ -63,7 +65,7 @@ val_interval = 1000
 workflow = [('train', val_interval), ('val', 1)]
 evaluation = dict(interval=val_interval, metric='mIoU', pre_eval=True, save_best='mIoU')
 checkpoint_config = dict(_delete_=True)
-data = dict(samples_per_gpu=2, workers_per_gpu=4)
+data = dict(samples_per_gpu=8, workers_per_gpu=4)
 
 # print(_base_)
 
