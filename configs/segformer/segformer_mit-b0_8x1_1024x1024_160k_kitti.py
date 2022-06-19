@@ -10,19 +10,19 @@ model = dict(
         init_cfg=dict(type='Pretrained', checkpoint='pretrain/mit_b0.pth')),
     # test_cfg=dict(mode='slide', crop_size=(368, 368), stride=(245, 245)),
     decode_head=dict(
+        sampler=dict(type='OHEMPixelSampler', min_kept=100000),
         loss_decode=dict(
-            type='CrossEntropyLoss', use_sigmoid=False, loss_weight=1.0, avg_non_ignore=True,
-            # Kitti
-            class_weight=[0.75952312, 0.8523161, 0.80858376, 0.94312681, 0.95249373, 0.91668514,
-                          1.02670926, 0.99855901, 0.74849044, 0.8041853, 0.79715573, 1.14388026,
-                          1.28290288, 0.82965688, 1.04470749, 1.17929034, 1.32624767, 1.40595936,
-                          1.17952672])
+                type='CrossEntropyLoss', use_sigmoid=False, loss_weight=1.0, avg_non_ignore=True,
+                # Kitti
+                class_weight=[0.75952312, 0.8523161, 0.80858376, 0.94312681, 0.95249373, 0.91668514,
+                              1.02670926, 0.99855901, 0.74849044, 0.8041853, 0.79715573, 1.14388026,
+                              1.28290288, 0.82965688, 1.04470749, 1.17929034, 1.32624767, 1.40595936,
+                              1.17952672])
     )
 )
 
 # optimizer
 
-optimizer_config = dict()
 optimizer = dict(
     _delete_=True,
     type='AdamW',
@@ -48,7 +48,7 @@ lr_config = dict(
 # optimizer
 crop_size = (864, 256)
 
-val_interval = 1000
+val_interval = 500
 
 # runner = dict(
 #     _delete_=True,
