@@ -11,6 +11,7 @@ model = dict(
         embed_dims=64,
         num_layers=[3, 4, 6, 3]),
     decode_head=dict(in_channels=[64, 128, 320, 512],
+                     sampler=dict(type='OHEMPixelSampler', min_kept=100000),
                      loss_decode=dict(
                          type='CrossEntropyLoss', use_sigmoid=False, loss_weight=1.0, avg_non_ignore=True,
                          # Kitti
@@ -23,12 +24,10 @@ model = dict(
 )
 
 # optimizer
-
-optimizer_config = dict()
 optimizer = dict(
     _delete_=True,
     type='AdamW',
-    lr=0.00006,
+    lr=1e-5,
     betas=(0.9, 0.999),
     weight_decay=0.01,
     paramwise_cfg=dict(
@@ -41,15 +40,14 @@ optimizer = dict(
 lr_config = dict(
     policy='poly',
     warmup='linear',
-    warmup_iters=1500,
-    warmup_ratio=1e-6,
+    warmup_iters=5000,
+    warmup_ratio=1e-5,
     power=1.0,
     min_lr=0.0,
     by_epoch=False)
 
-crop_size = (864, 256)
-
 # optimizer
+crop_size = (864, 256)
 
 val_interval = 500
 
@@ -61,7 +59,7 @@ runner = dict(type='IterBasedRunner', max_iters=20000)
 workflow = [('train', val_interval), ('val', 1)]
 evaluation = dict(interval=val_interval, metric='mIoU', pre_eval=True, save_best='mIoU')
 checkpoint_config = dict(_delete_=True)
-data = dict(samples_per_gpu=8, workers_per_gpu=4)
+data = dict(samples_per_gpu=2, workers_per_gpu=4)
 
 # workflow = [('train', 4000), ('val', 1)]
 # evaluation = dict(interval=4000, metric='mIoU', pre_eval=True, save_best='mIoU')

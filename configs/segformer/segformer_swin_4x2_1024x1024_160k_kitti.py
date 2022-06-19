@@ -18,6 +18,7 @@ model = dict(
         patch_norm=True),
     decode_head=dict(
         in_channels=[96, 192, 384, 768], num_classes=19,
+        sampler=dict(type='OHEMPixelSampler', min_kept=100000),
         loss_decode=dict(
             type='CrossEntropyLoss', use_sigmoid=False, loss_weight=1.0, avg_non_ignore=True,
             # Kitti
@@ -28,34 +29,35 @@ model = dict(
     ),
 )
 
-# AdamW optimizer, no weight decay for position embedding & layer norm
-# in backbone
+# optimizer
 optimizer = dict(
     _delete_=True,
     type='AdamW',
-    lr=0.00006,
+    lr=1e-5,
     betas=(0.9, 0.999),
     weight_decay=0.01,
     paramwise_cfg=dict(
         custom_keys={
-            'absolute_pos_embed': dict(decay_mult=0.),
-            'relative_position_bias_table': dict(decay_mult=0.),
-            'norm': dict(decay_mult=0.)
+            'pos_block': dict(decay_mult=0.),
+            'norm': dict(decay_mult=0.),
+            'head': dict(lr_mult=10.)
         }))
 
 lr_config = dict(
-    _delete_=True,
     policy='poly',
     warmup='linear',
-    warmup_iters=1500,
-    warmup_ratio=1e-6,
+    warmup_iters=5000,
+    warmup_ratio=1e-5,
     power=1.0,
     min_lr=0.0,
     by_epoch=False)
 
 # optimizer
+crop_size = (864, 256)
 
-val_interval = 1000
+val_interval = 500
+
+runner = dict(type='IterBasedRunner', max_iters=20000)
 
 # runner = dict(
 #     _delete_=True,
@@ -65,6 +67,11 @@ evaluation = dict(interval=val_interval, metric='mIoU', pre_eval=True, save_best
 checkpoint_config = dict(_delete_=True)
 data = dict(samples_per_gpu=2, workers_per_gpu=4)
 
-# print(_base_)
+# workflow = [('train', 4000), ('val', 1)]
+# evaluation = dict(interval=4000, metric='mIoU', pre_eval=True, save_best='mIoU')
+# checkpoint_config = dict(by_epoch=False, interval=4000)
+# data = dict(samples_per_gpu=2, workers_per_gpu=4)
+
 
 log_config = {{_base_.customized_log_config}}
+

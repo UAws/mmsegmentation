@@ -2,6 +2,7 @@ _base_ = [
     '../_base_/models/segformer_mit-b0.py',
     '../_base_/datasets/kitti_seg.py',
     '../_base_/default_runtime.py', '../_base_/schedules/schedule_160k.py',
+    '../_base_/wandb_logger_mmseg_training_kitti_segFormer.py'
 ]
 
 model = dict(
@@ -9,14 +10,16 @@ model = dict(
         init_cfg=dict(type='Pretrained', checkpoint='pretrain/mit_b5.pth'),
         embed_dims=64,
         num_layers=[3, 6, 40, 3]),
-    decode_head=dict(in_channels=[64, 128, 320, 512]))
+    decode_head=dict(
+        in_channels=[64, 128, 320, 512]),
+)
 
 # optimizer
 
-optimizer_config = dict()
 optimizer = dict(
+    _delete_=True,
     type='AdamW',
-    lr=0.00006,
+    lr=1e-5,
     betas=(0.9, 0.999),
     weight_decay=0.01,
     paramwise_cfg=dict(
@@ -29,32 +32,29 @@ optimizer = dict(
 lr_config = dict(
     policy='poly',
     warmup='linear',
-    warmup_iters=1500,
-    warmup_ratio=1e-6,
+    warmup_iters=5000,
+    warmup_ratio=1e-5,
     power=1.0,
     min_lr=0.0,
     by_epoch=False)
 
 # optimizer
+crop_size = (864, 256)
 
-# runner = dict(type='IterBasedRunner', max_epochs=1000)
-workflow = [('train', 2000), ('val', 1)]
-evaluation = dict(interval=4000, metric='mIoU', pre_eval=True, save_best='mIoU')
-checkpoint_config = dict(by_epoch=False, interval=4000)
-data = dict(samples_per_gpu=4, workers_per_gpu=4)
+val_interval = 500
 
+# runner = dict(
+#     _delete_=True,
+#     type='EpochBasedRunner', max_epochs=100)
+workflow = [('train', val_interval), ('val', 1)]
+evaluation = dict(interval=val_interval, metric='mIoU', pre_eval=True, save_best='mIoU')
+runner = dict(type='IterBasedRunner', max_iters=20000)
 
-log_config = dict(
-    interval=50,
-    hooks=[
-        dict(type='TextLoggerHook', by_epoch=False),
-        dict(type='WandbLoggerHook',
-             init_kwargs={
-                 'entity': 'ak6',
-                 'project': 'mmseg_training_kitti_segFormer',
-             },
-             out_suffix=('.log', '.log.json', '.pth', '.py')
-             ),
-        # dict(type='TensorboardLoggerHook')
-    ])
+# runner = dict(type='EpochBasedRunner', max_epochs=100)
+# workflow = [('train', 2000), ('val', 1)]
+# evaluation = dict(interval=4000, metric='mIoU', pre_eval=True, save_best='mIoU')
+# checkpoint_config = dict(by_epoch=False, interval=4000)
+data = dict(samples_per_gpu=2, workers_per_gpu=4)
 
+log_config = {{_base_.customized_log_config}}
+# test_cfg = dict(mode='slide', crop_size=368, stride=245)
