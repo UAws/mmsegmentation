@@ -1,6 +1,6 @@
 _base_ = [
     '../_base_/models/segformer_mit-b0.py',
-    '../_base_/datasets/kitti_seg.py',
+    '../_base_/datasets/kitti_seg_basic.py',
     '../_base_/default_runtime.py', '../_base_/schedules/schedule_160k.py',
     '../_base_/wandb_logger_mmseg_training_kitti_segFormer.py'
 ]

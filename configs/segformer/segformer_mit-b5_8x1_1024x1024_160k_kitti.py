@@ -1,6 +1,6 @@
 _base_ = [
     '../_base_/models/segformer_mit-b0.py',
-    '../_base_/datasets/kitti_seg.py',
+    '../_base_/datasets/kitti_seg_basic.py',
     '../_base_/default_runtime.py', '../_base_/schedules/schedule_160k.py',
     '../_base_/wandb_logger_mmseg_training_kitti_segFormer.py'
 ]
@@ -28,7 +28,7 @@ model = dict(
 optimizer = dict(
     _delete_=True,
     type='AdamW',
-    lr=1e-6,
+    lr=1e-5,
     betas=(0.9, 0.999),
     weight_decay=0.01,
     paramwise_cfg=dict(
@@ -42,7 +42,7 @@ lr_config = dict(
     policy='poly',
     warmup='linear',
     warmup_iters=5000,
-    warmup_ratio=1e-6,
+    warmup_ratio=1e-5,
     power=1.0,
     min_lr=0.0,
     by_epoch=False)
