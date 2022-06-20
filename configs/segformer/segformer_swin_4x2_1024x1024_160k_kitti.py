@@ -1,7 +1,7 @@
 _base_ = [
     '../_base_/models/segformer_swin.py',
     '../_base_/datasets/kitti_seg_basic.py',
-    '../_base_/default_runtime.py','../_base_/schedules/schedule_160k.py',
+    '../_base_/default_runtime.py', '../_base_/schedules/schedule_160k.py',
     '../_base_/wandb_logger_mmseg_training_kitti_segFormer.py'
 ]
 
@@ -74,4 +74,3 @@ data = dict(samples_per_gpu=2, workers_per_gpu=4)
 
 
 log_config = {{_base_.customized_log_config}}
-
