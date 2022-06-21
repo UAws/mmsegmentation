@@ -64,4 +64,4 @@ runner = dict(type='IterBasedRunner', max_iters=20000)
 data = dict(samples_per_gpu=2, workers_per_gpu=4)
 
 # log_config = {{_base_.customized_log_config}}
-# test_cfg = dict(mode='slide', crop_size=368, stride=245)
+test_cfg = dict(mode='slide', crop_size=368, stride=245)
