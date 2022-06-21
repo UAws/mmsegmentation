@@ -55,13 +55,13 @@ val_interval = 500
 #     type='EpochBasedRunner', max_epochs=100)
 workflow = [('train', val_interval), ('val', 1)]
 evaluation = dict(interval=val_interval, metric='mIoU', pre_eval=True, save_best='mIoU')
-runner = dict(type='IterBasedRunner', max_iters=10000)
+runner = dict(type='IterBasedRunner', max_iters=20000)
 
 # runner = dict(type='EpochBasedRunner', max_epochs=100)
 # workflow = [('train', 2000), ('val', 1)]
 # evaluation = dict(interval=4000, metric='mIoU', pre_eval=True, save_best='mIoU')
 # checkpoint_config = dict(by_epoch=False, interval=4000)
-data = dict(samples_per_gpu=8, workers_per_gpu=4)
+data = dict(samples_per_gpu=2, workers_per_gpu=4)
 
-log_config = {{_base_.customized_log_config}}
+# log_config = {{_base_.customized_log_config}}
 # test_cfg = dict(mode='slide', crop_size=368, stride=245)

@@ -28,10 +28,10 @@ class BasicDecoder(BaseDecodeHead):
         x = self.upsample_cov2(x)
         x = self.upsample_cov3(x)
         x = F.interpolate(x, size=self.input_size, mode="bilinear", align_corners=True)  # resize (1/2 -> original size)
-        x = resize(
-            input=x,
-            size=x.shape[2:],
-            mode=self.interpolate_mode,
-            align_corners=self.align_corners)
+        # x = resize(
+        #     input=x,
+        #     size=x.shape[2:],
+        #     mode=self.interpolate_mode,
+        #     align_corners=self.align_corners)
 
         return x

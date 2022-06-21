@@ -40,7 +40,7 @@ optimizer = dict(
 lr_config = dict(
     policy='poly',
     warmup='linear',
-    warmup_iters=1500,
+    warmup_iters=5000,
     warmup_ratio=1e-5,
     power=1.0,
     min_lr=0.0,
@@ -59,7 +59,7 @@ runner = dict(type='IterBasedRunner', max_iters=20000)
 workflow = [('train', val_interval), ('val', 1)]
 evaluation = dict(interval=val_interval, metric='mIoU', pre_eval=True, save_best='mIoU')
 checkpoint_config = dict(_delete_=True)
-data = dict(samples_per_gpu=8, workers_per_gpu=4)
+data = dict(samples_per_gpu=2, workers_per_gpu=4)
 
 # workflow = [('train', 4000), ('val', 1)]
 # evaluation = dict(interval=4000, metric='mIoU', pre_eval=True, save_best='mIoU')
