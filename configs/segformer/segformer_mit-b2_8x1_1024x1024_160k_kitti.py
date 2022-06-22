@@ -5,6 +5,8 @@ _base_ = [
     '../_base_/wandb_logger_mmseg_training_kitti_segFormer.py'
 ]
 
+norm_cfg = dict(type='SyncBN', requires_grad=True)
+
 model = dict(
     backbone=dict(
         init_cfg=dict(type='Pretrained', checkpoint='pretrain/mit_b2.pth'),
@@ -20,6 +22,26 @@ model = dict(
                                        1.28290288, 0.82965688, 1.04470749, 1.17929034, 1.32624767, 1.40595936,
                                        1.17952672])
                      ),
+    auxiliary_head=dict(
+        type='FCNHead',
+        in_channels=320,
+        in_index=2,
+        channels=256,
+        num_convs=1,
+        concat_input=False,
+        dropout_ratio=0.1,
+        num_classes=19,
+        norm_cfg=norm_cfg,
+        align_corners=False,
+        loss_decode=dict(
+            type='CrossEntropyLoss', use_sigmoid=False, loss_weight=0.4, avg_non_ignore=True,
+            # Kitti
+            class_weight=[0.75952312, 0.8523161, 0.80858376, 0.94312681, 0.95249373, 0.91668514,
+                          1.02670926, 0.99855901, 0.74849044, 0.8041853, 0.79715573, 1.14388026,
+                          1.28290288, 0.82965688, 1.04470749, 1.17929034, 1.32624767, 1.40595936,
+                          1.17952672])
+    )
+    ,
 
 )
 
